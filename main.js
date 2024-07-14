@@ -31,6 +31,7 @@ const saturnRingTexture = new THREE.TextureLoader().load('saturn_ring.png');
 const uranusTexture = new THREE.TextureLoader().load('2k_uranus.jpg');
 const uranusRingTexture = new THREE.TextureLoader().load('uranus_ring.png');
 const neptuneTexture = new THREE.TextureLoader().load('2k_neptune.jpg');
+const plutoTexture = new THREE.TextureLoader().load('pluto.jpg');
 const moonTexture = new THREE.TextureLoader().load('2k_moon.jpg');
 const spaceTexture = new THREE.TextureLoader().load('2k_stars_milky_way.jpg');
 
@@ -50,19 +51,22 @@ const sun = new THREE.Mesh(
 )
 scene.add(sun);
 
-const mercury = createPlanet(0.075, mercuryTexture, 0.38);
-const venus = createPlanet(0.095, venusTexture, 0.72);
+const mercury = createPlanet(0.075, mercuryTexture, 0.387);
+const venus = createPlanet(0.095, venusTexture, 0.723);
 const earth = createPlanet(0.1, earthTexture, 1);
-// TODO Add moon to earth
 // Moon
-// const moon = new THREE.Mesh(
-//     new THREE.SphereGeometry(0.02724, 32, 32),
-//     new THREE.MeshStandardMaterial({
-//         map: moonTexture,
-//     })
-// )
-// moon.position.set(sunRadius + 1 * scaleFactor, 0, 0.2)
-// scene.add(moon);
+const moon = new THREE.Mesh(
+    new THREE.SphereGeometry(0.02724, 32, 32),
+    new THREE.MeshStandardMaterial({
+        map: moonTexture,
+    })
+)
+const moonObject = new THREE.Object3D();
+moonObject.position.set(sunRadius + 1 * scaleFactor, 0, 0);
+moon.position.set(0, 0, 0.3);
+moonObject.add(moon);
+earth.object.add(moonObject);
+moonObject.rotateZ(0.0872665);
 const mars = createPlanet(0.0532, marsTexture, 1.52);
 const jupiter = createPlanet(1.121, jupiterTexture, 6.2);
 const saturn = createPlanet(0.945, saturnTexture, 10.58, {
@@ -78,6 +82,8 @@ const uranus = createPlanet(0.4, uranusTexture, 19.14, {
 });
 uranus.mesh.rotateX(1.7064084); // Rotate uranus because it rotates on a different axis than the rest of the planets
 const neptune = createPlanet(0.388, neptuneTexture, 30.2);
+const pluto = createPlanet(0.0187, plutoTexture, 39.5);
+pluto.object.rotateX(0.296706);
 
 // Lighting
 const pointLight = new THREE.PointLight(0xffffff, 5, 0, 0);
@@ -131,6 +137,8 @@ function movePlanets() {
     venus.object.rotateY(0.000163);
     earth.mesh.rotateY(0.0365);
     earth.object.rotateY(0.0001);
+    moon.rotateY(0.001332);
+    moonObject.rotateY(0.01337);
     mars.mesh.rotateY(0.035437);
     mars.object.rotateY(0.0000532);
     jupiter.mesh.rotateY(0.087952);
@@ -141,12 +149,13 @@ function movePlanets() {
     uranus.object.rotateY(0.00000119);
     neptune.mesh.rotateY(0.054235);
     neptune.object.rotateY(0.000000611);
+    pluto.mesh.rotateY(0.0057);
+    pluto.object.rotateY(0.0000004);
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    // Move planets
     movePlanets();
 
     controls.update();
